@@ -83,6 +83,13 @@ def dijkstra_algorithm_with_path(start: int) -> list:
                     path[i] = idx
     return path
 
+def is_float(element) -> bool:
+    try:
+        float(element)
+        return True
+    except ValueError:
+        return False
+    
 def dijkstra_algorithm_without_path(start: int) -> list:
     passed = [start]
     nopass = [x for x in range(len(maps)) if x != start]
@@ -188,8 +195,8 @@ main
 
 if __name__ == "__main__":
     #initialization
-    """only for administrators
-    method = 0
+    """
+    method = 1
     row = 10
     col = 10
     tasklist = [3,6,8,14,47,51,66,81]
@@ -197,6 +204,8 @@ if __name__ == "__main__":
     charginglist = [0,99]
     time = 1000
     cost_of_moving = 2
+    cost = 4
+    charging_time = 5
     """
     method = input("Enter 0 if you want to complete the tasks in order, enter 1 to traverse in a shortest cost:")
     while method != '1' and method != '0':
@@ -241,7 +250,7 @@ if __name__ == "__main__":
                 elif obstacle in tasklist:
                     print("this location already exists a task, please try again")
                 else:
-                    obstaclelist.append(task)
+                    obstaclelist.append(obstacle)
             else:
                 print("obstacle out of range[ 0,", row*col-1,"], please try again")
         else:
@@ -276,10 +285,18 @@ if __name__ == "__main__":
     time = int(time)
     #initialize_cost_of_moving
     cost_of_moving = input("please enter the moving cost of power for each step:")
-    while cost_of_moving.isdigit() == False:
+    while is_float(cost_of_moving) == False:
         cost_of_moving = input("invalid input! Please try again:")
-    cost_of_moving = int(row)
-    cost = 4
+    cost_of_moving = float(cost_of_moving)
+    cost = input("please enter the moving time for each step:")
+    while is_float(cost) == False:
+        cost = input("invalid input! Please try again:")
+    cost= float(cost)
+    charging_time = input("please enter the time spent for each charging:")
+    while is_float(charging_time) == False:
+        charging_time = input("invalid input! Please try again:")
+    charging_time = float(charging_time)
+    
     task_finished = 0
     #initialize_map
     maps = [[cost for x in range(4)] for y in range(row*col)]
@@ -319,7 +336,7 @@ if __name__ == "__main__":
     while time>0 and agent.battery>0:
         if method == 0:#dijkstra algorithm
             if agent.location in charginglist and agent.battery < 100: #reach the charging station and battery <100
-                time = time - 5
+                time = time - charging_time
                 agent.battery = 100
                 agent.clear_path()
                 agent.finish_charge()
@@ -392,4 +409,3 @@ if __name__ == "__main__":
     print ("remain battery",agent.battery)
     print ("remain time",time)
   
-    
